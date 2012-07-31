@@ -24,7 +24,7 @@ assign sync_sig = ffs[NUM_FFS-1];
 // At each rising edge, shift the async_sig in
 always @(posedge clk or negedge rst_n) begin
   if (~rst_n) begin
-    ffs <= {NUM_FFS-1{1'b0}};
+    ffs <= {NUM_FFS{1'b0}};
   end else begin
     ffs <= {ffs[NUM_FFS-2:0],async_sig};
   end

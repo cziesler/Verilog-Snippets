@@ -6,6 +6,10 @@
 #
 ###############################################################################
 
+# directories
+TB_DIR  = ../tb
+RTL_DIR = ../rtl
+
 # vcs options
 VCS_OPTS =         \
   +v2k             \
@@ -13,7 +17,7 @@ VCS_OPTS =         \
   +lint=all,noVCDE \
   -full64          \
   +libext+.v       \
-  -y rtl
+  -y $(RTL_DIR)
 
 ###############################################################################
 # Verify the sync module
@@ -24,7 +28,7 @@ NUM_FFS = 2
 
 # The command to run vcs
 run_sync:
-	vcs tb/tb_sync.v $(VCS_OPTS) +define+NUM_FFS=$(NUM_FFS)
+	vcs $(TB_DIR)/tb_sync.v $(VCS_OPTS) +define+NUM_FFS=$(NUM_FFS)
 	simv
 
 ###############################################################################
@@ -33,7 +37,7 @@ run_sync:
 
 # The command to run vcs
 run_fa:
-	vcs tb/tb_full_adder.v $(VCS_OPTS)
+	vcs $(TB_DIR)/tb_full_adder.v $(VCS_OPTS)
 	simv
 
 ###############################################################################
@@ -42,7 +46,7 @@ run_fa:
 
 # The command to run vcs
 run_ha:
-	vcs tb/tb_half_adder.v $(VCS_OPTS)
+	vcs $(TB_DIR)/tb_half_adder.v $(VCS_OPTS)
 	simv
 
 ###############################################################################
@@ -51,7 +55,32 @@ run_ha:
 
 # The command to run vcs
 run_dff:
-	vcs tb/tb_dff.v $(VCS_OPTS)
+	vcs $(TB_DIR)/tb_dff.v $(VCS_OPTS)
+	simv
+
+###############################################################################
+# Verify the counter module
+###############################################################################
+
+# Default WIDTH plusarg
+WIDTH = 4
+
+# The command to run vcs
+run_counter:
+	vcs $(TB_DIR)/tb_counter.v $(VCS_OPTS) +define+WIDTH=$(WIDTH)
+	simv
+
+###############################################################################
+# Verify the ram module
+###############################################################################
+
+# Default plusargs
+AWIDTH = 4
+DWIDTH = 8
+
+# The command to run vcs
+run_ram:
+	vcs $(TB_DIR)/tb_ram.v $(VCS_OPTS) +define+AWIDTH=$(AWIDTH) +define+DWIDTH=$(DWIDTH)
 	simv
 
 ###############################################################################
