@@ -12,6 +12,7 @@ module counter
 (
   input   wire                 clk,
   input   wire                 rst_n,
+  input   wire                 up_count, // When 1, count up; when 0, count down
   output  wire   [WIDTH-1:0]   count
 );
 
@@ -26,7 +27,11 @@ always @(posedge clk or negedge rst_n) begin
   if (~rst_n) begin
     q_count <= {WIDTH{1'b0}};
   end else begin
-    q_count <= q_count + 1'b1;
+    if (up_count) begin
+      q_count <= q_count + 1'b1;
+    end else begin
+      q_count <= q_count - 1'b1;
+    end
   end
 end
 

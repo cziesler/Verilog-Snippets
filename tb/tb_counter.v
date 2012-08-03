@@ -18,6 +18,7 @@ module tb_counter ();
 //===========================================================================//
 reg  clk;
 reg  rst_n;
+reg  up_count;
 
 //===========================================================================//
 // Outputs from UUT
@@ -51,6 +52,7 @@ initial begin
   // Initialize signals
   clk       = 1'b0;
   rst_n     = 1'b0;
+  up_count  = 1'b1;
 
   // Take UUT out of reset
   @(negedge clk)
@@ -58,6 +60,21 @@ initial begin
 
   // Compare count to expected count
   for (i = 32'd0; i < 2*(2**(`WIDTH)); i = i + 1) begin
+    @(posedge clk)
+      if (count[`WIDTH-1:0] !== i[`WIDTH-1:0]) begin
+        $display ("ERROR - count [%0h] !== i [%0h] @ %0t", count, i[`WIDTH-1:0],
+          $time);
+      end
+  end
+
+  // Now, count down
+  @(negedge clk)
+    rst_n = 1'b0;
+  @(negedge clk)
+    rst_n = 1'b1;
+
+  up_count = 1'b0;
+  for (i = (2**(`WIDTH)); i >= 0; i = i - 1) begin
     @(posedge clk)
       if (count[`WIDTH-1:0] !== i[`WIDTH-1:0]) begin
         $display ("ERROR - count [%0h] !== i [%0h] @ %0t", count, i[`WIDTH-1:0],
@@ -75,6 +92,7 @@ end
 counter #(.WIDTH(`WIDTH)) counter_0 (
   .clk(clk),
   .rst_n(rst_n),
+  .up_count(up_count),
   .count(count[`WIDTH-1:0])
 );
 
